@@ -62,7 +62,7 @@ def generate_otp():
 def send_otp_email(email, otp):
     print(f"OTP for {email}: {otp}")
     msg = EmailMessage()
-    msg.set_content(f"Your OTP for login is: {otp})
+    msg.set_content(f"Your OTP for login is: {otp}")
     msg['Subject'] = 'PnI Election: Voting Portal Login OTP'
     msg['From'] = 'pni28election@gmail.com'
     msg['To'] = email
