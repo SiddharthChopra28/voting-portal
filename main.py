@@ -263,4 +263,4 @@ def logout():
 if __name__ == '__main__':
     # Initialize JSON files and templates
     ensure_json_files()
-    app.run(debug=True)
+    app.run()
