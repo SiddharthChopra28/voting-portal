@@ -3,7 +3,7 @@ import random
 import string
 import smtplib
 from email.message import EmailMessage
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, render_template_string, request, redirect, url_for, session, flash
 from functools import wraps
 from datetime import datetime
 from pymongo import MongoClient
@@ -14,6 +14,9 @@ app.secret_key = ''.join(random.choice(string.ascii_letters + string.digits) for
 
 DB_PWD = os.environ["DB_PWD"]
 SMTP_PWD = os.environ["SMTP_PWD"]
+
+IS_LIVE = os.environ["IS_LIVE"]
+
 
 
 client = MongoClient(f'mongodb+srv://siddharth:{DB_PWD}@voting-cluster.6xurpnj.mongodb.net/?retryWrites=true&w=majority&appName=voting-cluster')
@@ -34,7 +37,7 @@ def ensure_mongodb_setup():
             "type": "options",
             "options": ["Yatharth Goyal", "Devansh Chouksey", "Harsh Ninania", "None of the above"]
         })
-    
+
 ensure_mongodb_setup()
 
 def login_required(f):
@@ -104,73 +107,92 @@ def save_vote(option, email):
         {"$set": {"has_voted": True}}
     )
 
-@app.route('/')
-def home():
-    if 'email' in session:
-        return redirect(url_for('voting_page'))
-    return redirect(url_for('login'))
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        if not email:
-            flash('Please enter an email address.', 'danger')
-            return render_template('login.html')
-        if not is_email_allowed(email):
-            flash('This email is not allowed to access the voting system or has already voted.', 'danger')
-            return render_template('login.html')
-        otp = generate_otp()
-        save_otp(email, otp)
-        send_otp_email(email, otp)
-        session['temp_email'] = email
-        return redirect(url_for('verify_otp_route'))
-    return render_template('login.html')
+if IS_LIVE:
 
-@app.route('/verify-otp', methods=['GET', 'POST'])
-def verify_otp_route():
-    if 'temp_email' not in session:
-        flash('Please start the login process again.', 'warning')
-        return redirect(url_for('login'))
-    if request.method == 'POST':
-        entered_otp = request.form.get('otp')
-        email = session['temp_email']
-        if not entered_otp:
-            flash('Please enter the OTP sent to your email.', 'danger')
-            return render_template('verify_otp.html')
-        if verify_otp(email, entered_otp):
-            session.pop('temp_email', None)
-            session['email'] = email
-            flash('Logged in successfully!', 'success')
+    @app.route('/')
+    def home():
+        if 'email' in session:
             return redirect(url_for('voting_page'))
-        else:
-            flash('Invalid or expired OTP. Please try again.', 'danger')
-            return render_template('verify_otp.html')
-    return render_template('verify_otp.html')
+        return redirect(url_for('login'))
 
-@app.route('/vote', methods=['GET', 'POST'])
-@login_required
-def voting_page():
-    options_data = votes_collection.find_one({"type": "options"})
-    options = options_data["options"] if options_data else []
-    if request.method == 'POST':
-        selected_option = request.form.get('option')
-        if not selected_option or selected_option not in options:
-            flash('Please select a valid option.', 'danger')
-            return render_template('vote.html', options=options)
-        save_vote(selected_option, session['email'])
-        flash('Your vote has been recorded. Thank you!', 'success')
-        return redirect(url_for('thank_you'))
-    return render_template('vote.html', options=options)
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if request.method == 'POST':
+            email = request.form.get('email')
+            if not email:
+                flash('Please enter an email address.', 'danger')
+                return render_template('login.html')
+            if not is_email_allowed(email):
+                flash('This email is not allowed to access the voting system or has already voted.', 'danger')
+                return render_template('login.html')
+            otp = generate_otp()
+            save_otp(email, otp)
+            send_otp_email(email, otp)
+            session['temp_email'] = email
+            return redirect(url_for('verify_otp_route'))
+        return render_template('login.html')
 
-@app.route('/thank-you')
-def thank_you():
-    session.clear()
-    return render_template('thank_you.html')
+    @app.route('/verify-otp', methods=['GET', 'POST'])
+    def verify_otp_route():
+        if 'temp_email' not in session:
+            flash('Please start the login process again.', 'warning')
+            return redirect(url_for('login'))
+        if request.method == 'POST':
+            entered_otp = request.form.get('otp')
+            email = session['temp_email']
+            if not entered_otp:
+                flash('Please enter the OTP sent to your email.', 'danger')
+                return render_template('verify_otp.html')
+            if verify_otp(email, entered_otp):
+                session.pop('temp_email', None)
+                session['email'] = email
+                flash('Logged in successfully!', 'success')
+                return redirect(url_for('voting_page'))
+            else:
+                flash('Invalid or expired OTP. Please try again.', 'danger')
+                return render_template('verify_otp.html')
+        return render_template('verify_otp.html')
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash('You have been logged out.', 'info')
-    return redirect(url_for('login'))
+    @app.route('/vote', methods=['GET', 'POST'])
+    @login_required
+    def voting_page():
+        options_data = votes_collection.find_one({"type": "options"})
+        options = options_data["options"] if options_data else []
+        if request.method == 'POST':
+            selected_option = request.form.get('option')
+            if not selected_option or selected_option not in options:
+                flash('Please select a valid option.', 'danger')
+                return render_template('vote.html', options=options)
+            save_vote(selected_option, session['email'])
+            flash('Your vote has been recorded. Thank you!', 'success')
+            return redirect(url_for('thank_you'))
+        return render_template('vote.html', options=options)
 
+
+
+    @app.route('/thank-you')
+    def thank_you():
+        session.clear()
+        return render_template('thank_you.html')
+
+    @app.route('/logout')
+    def logout():
+        session.clear()
+        flash('You have been logged out.', 'info')
+        return redirect(url_for('login'))
+
+else:
+    @app.route('/')
+    def home():
+        return render_template_string('''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PnI Voting Portal</title>
+</head>
+<body>
+    <h1 style="text-align: center; margin-top: 50px;">Voting has not started yet</h1>
+</body>
+</html>''')
