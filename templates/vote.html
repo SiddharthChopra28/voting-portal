@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Vote - Voting App{% endblock %}
+{% block header %}Cast Your Vote{% endblock %}
+
+{% block content %}
+<p>Please select one option below to cast your vote:</p>
+<form method="POST" action="{{ url_for('voting_page') }}">
+    {% for option in options %}
+    <div class="vote-option">
+        <input type="radio" id="option-{{ loop.index }}" name="option" value="{{ option }}" required>
+        <label for="option-{{ loop.index }}">{{ option }}</label>
+    </div>
+    {% endfor %}
+    <button type="submit">Submit Vote</button>
+</form>
+{% endblock %}

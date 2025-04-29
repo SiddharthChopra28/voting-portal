@@ -1,0 +1,20 @@
+{
+    "options": [
+        "Option 1",
+        "Option 2",
+        "Option 3",
+        "Option 4"
+    ],
+    "votes": [
+        {
+            "s.no": 1,
+            "option": "Option 2",
+            "timestamp": 1745927830.483315
+        },
+        {
+            "s.no": 2,
+            "option": "Option 2",
+            "timestamp": 1745930989.082163
+        }
+    ]
+}
