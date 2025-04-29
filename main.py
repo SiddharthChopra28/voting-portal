@@ -8,6 +8,7 @@ from functools import wraps
 from datetime import datetime
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import json
 
 app = Flask(__name__)
 app.secret_key = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
@@ -17,6 +18,7 @@ SMTP_PWD = os.environ["SMTP_PWD"]
 
 IS_LIVE = bool(os.environ["IS_LIVE"])
 
+ADMIN_ID = 'pni28election@gmail.com'
 
 
 client = MongoClient(f'mongodb+srv://siddharth:{DB_PWD}@voting-cluster.6xurpnj.mongodb.net/?retryWrites=true&w=majority&appName=voting-cluster')
@@ -148,6 +150,8 @@ if IS_LIVE:
                 session.pop('temp_email', None)
                 session['email'] = email
                 flash('Logged in successfully!', 'success')
+                if email == ADMIN_ID:
+                    return redirect(url_for('admin_page'))
                 return redirect(url_for('voting_page'))
             else:
                 flash('Invalid or expired OTP. Please try again.', 'danger')
@@ -169,6 +173,16 @@ if IS_LIVE:
             return redirect(url_for('thank_you'))
         return render_template('vote.html', options=options)
 
+    @app.route('/admin', methods=['GET'])
+    @login_required
+    def admin_page():
+        if session['email'] != ADMIN_ID:
+            return "Forbidden", 403
+        
+        votes = list(votes_collection.find())
+        docs_as_str = json.dumps(votes, default=str, indent=4)
+        return docs_as_str
+        
 
 
     @app.route('/thank-you')
