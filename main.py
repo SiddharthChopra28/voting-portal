@@ -19,6 +19,7 @@ allowed_emails_collection = db.allowed_emails
 otp_collection = db.otp_data
 votes_collection = db.votes
 
+
 def ensure_mongodb_setup():
     if allowed_emails_collection.count_documents({}) == 0:
         allowed_emails_collection.insert_many([{'email': 'aakarshit1@me.iitr.ac.in', 'has_voted': False}, {'email': 'aaryan_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_s@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_s1@me.iitr.ac.in', 'has_voted': False}, {'email': 'akshit_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'anjali1@me.iitr.ac.in', 'has_voted': False}, {'email': 'arjun_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'aryan_s2@me.iitr.ac.in', 'has_voted': False}, {'email': 'bhushan_dk@me.iitr.ac.in', 'has_voted': False}, {'email': 'chiraag_mk@me.iitr.ac.in', 'has_voted': False}, {'email': 'devansh_c@me.iitr.ac.in', 'has_voted': False}, {'email': 'diwase_ss@me.iitr.ac.in', 'has_voted': False}, {'email': 'hardik_g@me.iitr.ac.in', 'has_voted': False}, {'email': 'harsh_n@me.iitr.ac.in', 'has_voted': False}, {'email': 'harsh_n1@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshal_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshita1@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshita_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'himanshu_y@me.iitr.ac.in', 'has_voted': False}, {'email': 'himesh_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'jadhavar_sb@me.iitr.ac.in', 'has_voted': False}, {'email': 'jaswant_km@me.iitr.ac.in', 'has_voted': False}, {'email': 'liki_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'mahajan_pj@me.iitr.ac.in', 'has_voted': False}, {'email': 'manav1@me.iitr.ac.in', 'has_voted': False}, {'email': 'mayank_m@me.iitr.ac.in', 'has_voted': False}, {'email': 'mohit_g2@me.iitr.ac.in', 'has_voted': False}, {'email': 'mohit_k1@me.iitr.ac.in', 'has_voted': False}, {'email': 'monika_s@me.iitr.ac.in', 'has_voted': False}, {'email': 'mukul1@me.iitr.ac.in', 'has_voted': False}, {'email': 'vamsi_kvv@me.iitr.ac.in', 'has_voted': False}, {'email': 'naman_pm@me.iitr.ac.in', 'has_voted': False}, {'email': 'navya_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'nilansh_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'palak_p@me.iitr.ac.in', 'has_voted': False}, {'email': 'pallavi_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'parteek_g@me.iitr.ac.in', 'has_voted': False}, {'email': 'parthan_as@me.iitr.ac.in', 'has_voted': False}, {'email': 'patil_sc@me.iitr.ac.in', 'has_voted': False}, {'email': 'piyush_k1@me.iitr.ac.in', 'has_voted': False}, {'email': 'pragya_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'rishi_t@me.iitr.ac.in', 'has_voted': False}, {'email': 'rudra_ps@me.iitr.ac.in', 'has_voted': False}, {'email': 'sanat_kj@me.iitr.ac.in', 'has_voted': False}, {'email': 'neel_sp@me.iitr.ac.in', 'has_voted': False}, {'email': 'satyam_p@me.iitr.ac.in', 'has_voted': False}, {'email': 'saumya_n@me.iitr.ac.in', 'has_voted': False}, {'email': 'shrey_d@me.iitr.ac.in', 'has_voted': False}, {'email': 'shubham_a@me.iitr.ac.in', 'has_voted': False}, {'email': 'siddharth_c1@me.iitr.ac.in', 'has_voted': False}, {'email': 'khushi_sv@me.iitr.ac.in', 'has_voted': False}, {'email': 'subhra_jd@me.iitr.ac.in', 'has_voted': False}, {'email': 'suhani_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'suyash_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'tushar_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'vinayak_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'yatharth_g@me.iitr.ac.in', 'has_voted': False}])
@@ -27,6 +28,8 @@ def ensure_mongodb_setup():
             "type": "options",
             "options": ["Yatharth Goyal", "Devansh Chouksey", "Harsh Ninania", "None of the above"]
         })
+    
+ensure_mongodb_setup()
 
 def login_required(f):
     @wraps(f)
@@ -165,6 +168,3 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('login'))
 
-if __name__ == '__main__':
-    ensure_mongodb_setup()
-    app.run(host="0.0.0.0", port=10000)
