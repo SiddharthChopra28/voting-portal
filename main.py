@@ -1,5 +1,4 @@
 import os
-import json
 import random
 import string
 import smtplib
@@ -7,40 +6,33 @@ from email.message import EmailMessage
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from functools import wraps
 from datetime import datetime
+from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.secret_key = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
 
-# File paths for our JSON storage
-ALLOWED_EMAILS_FILE = 'allowed_emails.json'
-OTP_DATA_FILE = 'otp_data.json'
-VOTES_FILE = 'votes.json'
+# MongoDB Atlas connection
+client = MongoClient('mongodb+srv://siddharth:thisisarandompassword@voting-cluster.6xurpnj.mongodb.net/?retryWrites=true&w=majority&appName=voting-cluster')
+db = client.votingApp
 
-# Ensure our JSON files exist
-def ensure_json_files():
-    # Structure for allowed emails
-    if not os.path.exists(ALLOWED_EMAILS_FILE):
-        with open(ALLOWED_EMAILS_FILE, 'w') as f:
-            json.dump({
-                "emails": [
-                    "test@example.com",
-                    "user@example.com",
-                    "admin@example.com"
-                ]
-            }, f, indent=4)
+# Collections instead of JSON files
+allowed_emails_collection = db.allowed_emails
+otp_collection = db.otp_data
+votes_collection = db.votes
+
+# Ensure our MongoDB collections and data exist
+def ensure_mongodb_setup():
+    # Create initial data if collections are empty
+    if allowed_emails_collection.count_documents({}) == 0:
+        allowed_emails_collection.insert_many([{'email': 'aakarshit1@me.iitr.ac.in', 'has_voted': False}, {'email': 'aaryan_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_s@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_s1@me.iitr.ac.in', 'has_voted': False}, {'email': 'akshit_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'anjali1@me.iitr.ac.in', 'has_voted': False}, {'email': 'arjun_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'aryan_s2@me.iitr.ac.in', 'has_voted': False}, {'email': 'bhushan_dk@me.iitr.ac.in', 'has_voted': False}, {'email': 'chiraag_mk@me.iitr.ac.in', 'has_voted': False}, {'email': 'devansh_c@me.iitr.ac.in', 'has_voted': False}, {'email': 'diwase_ss@me.iitr.ac.in', 'has_voted': False}, {'email': 'hardik_g@me.iitr.ac.in', 'has_voted': False}, {'email': 'harsh_n@me.iitr.ac.in', 'has_voted': False}, {'email': 'harsh_n1@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshal_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshita1@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshita_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'himanshu_y@me.iitr.ac.in', 'has_voted': False}, {'email': 'himesh_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'jadhavar_sb@me.iitr.ac.in', 'has_voted': False}, {'email': 'jaswant_km@me.iitr.ac.in', 'has_voted': False}, {'email': 'liki_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'mahajan_pj@me.iitr.ac.in', 'has_voted': False}, {'email': 'manav1@me.iitr.ac.in', 'has_voted': False}, {'email': 'mayank_m@me.iitr.ac.in', 'has_voted': False}, {'email': 'mohit_g2@me.iitr.ac.in', 'has_voted': False}, {'email': 'mohit_k1@me.iitr.ac.in', 'has_voted': False}, {'email': 'monika_s@me.iitr.ac.in', 'has_voted': False}, {'email': 'mukul1@me.iitr.ac.in', 'has_voted': False}, {'email': 'vamsi_kvv@me.iitr.ac.in', 'has_voted': False}, {'email': 'naman_pm@me.iitr.ac.in', 'has_voted': False}, {'email': 'navya_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'nilansh_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'palak_p@me.iitr.ac.in', 'has_voted': False}, {'email': 'pallavi_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'parteek_g@me.iitr.ac.in', 'has_voted': False}, {'email': 'parthan_as@me.iitr.ac.in', 'has_voted': False}, {'email': 'patil_sc@me.iitr.ac.in', 'has_voted': False}, {'email': 'piyush_k1@me.iitr.ac.in', 'has_voted': False}, {'email': 'pragya_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'rishi_t@me.iitr.ac.in', 'has_voted': False}, {'email': 'rudra_ps@me.iitr.ac.in', 'has_voted': False}, {'email': 'sanat_kj@me.iitr.ac.in', 'has_voted': False}, {'email': 'neel_sp@me.iitr.ac.in', 'has_voted': False}, {'email': 'satyam_p@me.iitr.ac.in', 'has_voted': False}, {'email': 'saumya_n@me.iitr.ac.in', 'has_voted': False}, {'email': 'shrey_d@me.iitr.ac.in', 'has_voted': False}, {'email': 'shubham_a@me.iitr.ac.in', 'has_voted': False}, {'email': 'siddharth_c1@me.iitr.ac.in', 'has_voted': False}, {'email': 'khushi_sv@me.iitr.ac.in', 'has_voted': False}, {'email': 'subhra_jd@me.iitr.ac.in', 'has_voted': False}, {'email': 'suhani_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'suyash_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'tushar_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'vinayak_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'yatharth_g@me.iitr.ac.in', 'has_voted': False}])
     
-    # Structure for OTP data
-    if not os.path.exists(OTP_DATA_FILE):
-        with open(OTP_DATA_FILE, 'w') as f:
-            json.dump({}, f, indent=4)
-    
-    # Structure for votes
-    if not os.path.exists(VOTES_FILE):
-        with open(VOTES_FILE, 'w') as f:
-            json.dump({
-                "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-                "votes": []
-            }, f, indent=4)
+    # Create voting options if they don't exist
+    if votes_collection.count_documents({"type": "options"}) == 0:
+        votes_collection.insert_one({
+            "type": "options",
+            "options": ["Yatharth Goyal", "Devansh Chouksey", "Harsh Ninania", "None of the above"]
+        })
 
 # Login required decorator
 def login_required(f):
@@ -54,109 +46,88 @@ def login_required(f):
 
 # Check if email is in allowed list
 def is_email_allowed(email):
-    with open(ALLOWED_EMAILS_FILE, 'r') as f:
-        data = json.load(f)
-        return (email in data["emails"].keys()) and (not data["emails"][email])
+    user = allowed_emails_collection.find_one({"email": email})
+    return user is not None and not user.get("has_voted", False)
 
 # Generate a random 6-digit OTP
 def generate_otp():
     return ''.join(random.choice(string.digits) for _ in range(6))
 
-# Send OTP via email (mock function - we'll just print it for this example)
+# Send OTP via email
 def send_otp_email(email, otp):
-    # In a real application, you would configure SMTP settings and send an actual email
     print(f"OTP for {email}: {otp}")  # For development/testing only
-    
-    # Simulated email sending
-    # message = f"""
-    # Subject: Your OTP for Voting App Login
-    
-    # Your One-Time Password is: {otp}
-    
-    # This OTP will expire in 10 minutes.
-    # """
-    # print(message)
-    
-    # You would use something like this in production:
     
     # Configure your email settings here
     msg = EmailMessage()
     msg.set_content(f"Your OTP for login is: {otp}")
     msg['Subject'] = 'Voting App Login OTP'
-    msg['From'] = 'chiraagkathiresan7@gmail.com'
+    msg['From'] = 'pni28election@gmail.com'
     msg['To'] = email
     
     # Connect to SMTP server and send
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
         smtp.starttls()
-        smtp.login('chiraagkathiresan7@gmail.com', 'ovca zaiv szvo khbd')
+        smtp.login('pni28election@gmail.com', 'zhaw ylnb msdh ixuj')
         smtp.send_message(msg)
     
     return True
 
-# Save OTP to file
+# Save OTP to MongoDB
 def save_otp(email, otp):
-    with open(OTP_DATA_FILE, 'r') as f:
-        data = json.load(f)
+    # Remove any existing OTP for this email
+    otp_collection.delete_many({"email": email})
     
-    # Add/update OTP with timestamp for expiry checking
-    data[email] = {
+    # Insert new OTP with timestamp
+    otp_collection.insert_one({
+        "email": email,
         "otp": otp,
         "timestamp": datetime.now().timestamp()
-    }
-    
-    with open(OTP_DATA_FILE, 'w') as f:
-        json.dump(data, f, indent=4)
+    })
 
 # Verify OTP is correct and not expired
 def verify_otp(email, entered_otp):
-    with open(OTP_DATA_FILE, 'r') as f:
-        data = json.load(f)
+    otp_data = otp_collection.find_one({"email": email})
     
-    if email not in data:
+    if not otp_data:
         return False
     
     # Check if OTP is correct and not expired (10 minutes validity)
-    otp_data = data[email]
     otp_time = otp_data["timestamp"]
     current_time = datetime.now().timestamp()
     
     # 600 seconds = 10 minutes
     if current_time - otp_time <= 600 and otp_data["otp"] == entered_otp:
         # Remove the OTP after successful verification
-        del data[email]
-        with open(OTP_DATA_FILE, 'w') as f:
-            json.dump(data, f, indent=4)
+        otp_collection.delete_one({"email": email})
         return True
     
     return False
 
-# Save vote to file (anonymized and randomized)
-def save_vote(option, emailid):
-    with open(VOTES_FILE, 'r') as f:
-        data = json.load(f)
-        
-    sno = 0
-    for i in data["votes"]:
-        if int(i["s.no"])>sno:
-            sno = int(i["s.no"])
-    sno += 1
+# Save vote to MongoDB
+def save_vote(option, email):
+    # Get the current highest serial number
+    highest_vote = votes_collection.find_one(
+        {"type": "vote"}, 
+        sort=[("s_no", -1)]
+    )
+    
+    sno = 1  # Default if no votes exist
+    if highest_vote and "s_no" in highest_vote:
+        sno = highest_vote["s_no"] + 1
+    
     # Add vote with timestamp
-    data["votes"].append({
-        "s.no": sno,
+    votes_collection.insert_one({
+        "type": "vote",
+        "s_no": sno,
         "option": option,
         "timestamp": datetime.now().timestamp()
     })
     
-    with open(VOTES_FILE, 'w') as f:
-        json.dump(data, f, indent=4)
-        
-    with open(ALLOWED_EMAILS_FILE, 'r') as f:
-        data = json.load(f)
-    data["emails"][emailid] = True
-        
-    with open(ALLOWED_EMAILS_FILE, 'w') as f:
-        json.dump(data, f, indent=4)
+    # Mark email as voted
+    allowed_emails_collection.update_one(
+        {"email": email},
+        {"$set": {"has_voted": True}}
+    )
 
 # Route for the home page
 @app.route('/')
@@ -226,9 +197,8 @@ def verify_otp_route():
 @login_required
 def voting_page():
     # Get voting options
-    with open(VOTES_FILE, 'r') as f:
-        data = json.load(f)
-        options = data["options"]
+    options_data = votes_collection.find_one({"type": "options"})
+    options = options_data["options"] if options_data else []
     
     if request.method == 'POST':
         selected_option = request.form.get('option')
@@ -237,9 +207,8 @@ def voting_page():
             flash('Please select a valid option.', 'danger')
             return render_template('vote.html', options=options)
         
-        # Save the anonymized vote
+        # Save the vote
         save_vote(selected_option, session['email'])
-        print(session['email'])
         
         flash('Your vote has been recorded. Thank you!', 'success')
         return redirect(url_for('thank_you'))
@@ -261,6 +230,6 @@ def logout():
 
 
 if __name__ == '__main__':
-    # Initialize JSON files and templates
-    ensure_json_files()
-    app.run()
+    # Initialize MongoDB collections
+    ensure_mongodb_setup()
+    app.run(debug=True)
