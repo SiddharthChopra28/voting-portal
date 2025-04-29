@@ -12,12 +12,18 @@ from bson.objectid import ObjectId
 app = Flask(__name__)
 app.secret_key = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
 
-client = MongoClient('mongodb+srv://siddharth:thisisarandompassword@voting-cluster.6xurpnj.mongodb.net/?retryWrites=true&w=majority&appName=voting-cluster')
+DB_PWD = os.environ["DB_PWD"]
+SMTP_PWD = os.environ["SMTP_PWD"]
+
+
+client = MongoClient(f'mongodb+srv://siddharth:{DB_PWD}@voting-cluster.6xurpnj.mongodb.net/?retryWrites=true&w=majority&appName=voting-cluster')
 db = client.votingApp
 
 allowed_emails_collection = db.allowed_emails
 otp_collection = db.otp_data
 votes_collection = db.votes
+
+
 
 
 def ensure_mongodb_setup():
@@ -50,13 +56,13 @@ def generate_otp():
 def send_otp_email(email, otp):
     print(f"OTP for {email}: {otp}")
     msg = EmailMessage()
-    msg.set_content(f"Your OTP for login is: {otp}")
-    msg['Subject'] = 'Voting App Login OTP'
+    msg.set_content(f"Your OTP for login is: {otp}\nLogin at https://voting-portal.onrender.com/verify-otp")
+    msg['Subject'] = 'PnI Election: Voting Portal Login OTP'
     msg['From'] = 'pni28election@gmail.com'
     msg['To'] = email
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
         smtp.starttls()
-        smtp.login('pni28election@gmail.com', 'zhaw ylnb msdh ixuj')
+        smtp.login('pni28election@gmail.com', SMTP_PWD)
         smtp.send_message(msg)
     return True
 
