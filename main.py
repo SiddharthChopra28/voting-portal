@@ -18,7 +18,8 @@ SMTP_PWD = os.environ["SMTP_PWD"]
 
 IS_LIVE = bool(os.environ["IS_LIVE"])
 
-ADMIN_ID = 'pni28election@gmail.com'
+
+ADMIN_ID = 'siddharth_c1@me.iitr.ac.in'
 
 
 client = MongoClient(f'mongodb+srv://siddharth:{DB_PWD}@voting-cluster.6xurpnj.mongodb.net/?retryWrites=true&w=majority&appName=voting-cluster')
@@ -33,7 +34,7 @@ votes_collection = db.votes
 
 def ensure_mongodb_setup():
     if allowed_emails_collection.count_documents({}) == 0:
-        allowed_emails_collection.insert_many([{'email': 'aakarshit1@me.iitr.ac.in', 'has_voted': False}, {'email': 'aaryan_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_s@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_s1@me.iitr.ac.in', 'has_voted': False}, {'email': 'akshit_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'anjali1@me.iitr.ac.in', 'has_voted': False}, {'email': 'arjun_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'aryan_s2@me.iitr.ac.in', 'has_voted': False}, {'email': 'bhushan_dk@me.iitr.ac.in', 'has_voted': False}, {'email': 'chiraag_mk@me.iitr.ac.in', 'has_voted': False}, {'email': 'devansh_c@me.iitr.ac.in', 'has_voted': False}, {'email': 'diwase_ss@me.iitr.ac.in', 'has_voted': False}, {'email': 'hardik_g@me.iitr.ac.in', 'has_voted': False}, {'email': 'harsh_n@me.iitr.ac.in', 'has_voted': False}, {'email': 'harsh_n1@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshal_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshita1@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshita_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'himanshu_y@me.iitr.ac.in', 'has_voted': False}, {'email': 'himesh_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'jadhavar_sb@me.iitr.ac.in', 'has_voted': False}, {'email': 'jaswant_km@me.iitr.ac.in', 'has_voted': False}, {'email': 'liki_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'mahajan_pj@me.iitr.ac.in', 'has_voted': False}, {'email': 'manav1@me.iitr.ac.in', 'has_voted': False}, {'email': 'mayank_m@me.iitr.ac.in', 'has_voted': False}, {'email': 'mohit_g2@me.iitr.ac.in', 'has_voted': False}, {'email': 'mohit_k1@me.iitr.ac.in', 'has_voted': False}, {'email': 'monika_s@me.iitr.ac.in', 'has_voted': False}, {'email': 'mukul1@me.iitr.ac.in', 'has_voted': False}, {'email': 'vamsi_kvv@me.iitr.ac.in', 'has_voted': False}, {'email': 'naman_pm@me.iitr.ac.in', 'has_voted': False}, {'email': 'navya_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'nilansh_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'palak_p@me.iitr.ac.in', 'has_voted': False}, {'email': 'pallavi_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'parteek_g@me.iitr.ac.in', 'has_voted': False}, {'email': 'parthan_as@me.iitr.ac.in', 'has_voted': False}, {'email': 'patil_sc@me.iitr.ac.in', 'has_voted': False}, {'email': 'piyush_k1@me.iitr.ac.in', 'has_voted': False}, {'email': 'pragya_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'rishi_t@me.iitr.ac.in', 'has_voted': False}, {'email': 'rudra_ps@me.iitr.ac.in', 'has_voted': False}, {'email': 'sanat_kj@me.iitr.ac.in', 'has_voted': False}, {'email': 'neel_sp@me.iitr.ac.in', 'has_voted': False}, {'email': 'satyam_p@me.iitr.ac.in', 'has_voted': False}, {'email': 'saumya_n@me.iitr.ac.in', 'has_voted': False}, {'email': 'shrey_d@me.iitr.ac.in', 'has_voted': False}, {'email': 'shubham_a@me.iitr.ac.in', 'has_voted': False}, {'email': 'siddharth_c1@me.iitr.ac.in', 'has_voted': False}, {'email': 'khushi_sv@me.iitr.ac.in', 'has_voted': False}, {'email': 'subhra_jd@me.iitr.ac.in', 'has_voted': False}, {'email': 'suhani_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'suyash_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'tushar_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'vinayak_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'yatharth_g@me.iitr.ac.in', 'has_voted': False}])
+        allowed_emails_collection.insert_many([{'email': 'aakarshit1@me.iitr.ac.in', 'has_voted': False}, {'email': 'aaryan_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_s@me.iitr.ac.in', 'has_voted': False}, {'email': 'aditya_s1@me.iitr.ac.in', 'has_voted': False}, {'email': 'akshit_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'anjali1@me.iitr.ac.in', 'has_voted': False}, {'email': 'arjun_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'aryan_s2@me.iitr.ac.in', 'has_voted': False}, {'email': 'bhushan_dk@me.iitr.ac.in', 'has_voted': False}, {'email': 'chiraag_mk@me.iitr.ac.in', 'has_voted': False}, {'email': 'devansh_c@me.iitr.ac.in', 'has_voted': False}, {'email': 'diwase_ss@me.iitr.ac.in', 'has_voted': False}, {'email': 'hardik_g@me.iitr.ac.in', 'has_voted': False}, {'email': 'harsh_n@me.iitr.ac.in', 'has_voted': False}, {'email': 'harsh_n1@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshal_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshita1@me.iitr.ac.in', 'has_voted': False}, {'email': 'harshita_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'himanshu_y@me.iitr.ac.in', 'has_voted': False}, {'email': 'himesh_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'jadhavar_sb@me.iitr.ac.in', 'has_voted': False}, {'email': 'jaswant_km@me.iitr.ac.in', 'has_voted': False}, {'email': 'liki_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'mahajan_pj@me.iitr.ac.in', 'has_voted': False}, {'email': 'manav1@me.iitr.ac.in', 'has_voted': False}, {'email': 'mayank_m@me.iitr.ac.in', 'has_voted': False}, {'email': 'mohit_g2@me.iitr.ac.in', 'has_voted': False}, {'email': 'mohit_k1@me.iitr.ac.in', 'has_voted': False}, {'email': 'monika_s@me.iitr.ac.in', 'has_voted': False}, {'email': 'mukul1@me.iitr.ac.in', 'has_voted': False}, {'email': 'vamsi_kvv@me.iitr.ac.in', 'has_voted': False}, {'email': 'naman_pm@me.iitr.ac.in', 'has_voted': False}, {'email': 'navya_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'nilansh_b@me.iitr.ac.in', 'has_voted': False}, {'email': 'palak_p@me.iitr.ac.in', 'has_voted': False}, {'email': 'pallavi_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'parteek_g@me.iitr.ac.in', 'has_voted': False}, {'email': 'parthan_as@me.iitr.ac.in', 'has_voted': False}, {'email': 'patil_sc@me.iitr.ac.in', 'has_voted': False}, {'email': 'piyush_k1@me.iitr.ac.in', 'has_voted': False}, {'email': 'rishi_t@me.iitr.ac.in', 'has_voted': False}, {'email': 'sanat_kj@me.iitr.ac.in', 'has_voted': False}, {'email': 'neel_sp@me.iitr.ac.in', 'has_voted': False}, {'email': 'satyam_p@me.iitr.ac.in', 'has_voted': False}, {'email': 'saumya_n@me.iitr.ac.in', 'has_voted': False}, {'email': 'siddharth_c1@me.iitr.ac.in', 'has_voted': False}, {'email': 'khushi_sv@me.iitr.ac.in', 'has_voted': False}, {'email': 'subhra_jd@me.iitr.ac.in', 'has_voted': False}, {'email': 'suhani_r@me.iitr.ac.in', 'has_voted': False}, {'email': 'suyash_j@me.iitr.ac.in', 'has_voted': False}, {'email': 'tushar_k@me.iitr.ac.in', 'has_voted': False}, {'email': 'yatharth_g@me.iitr.ac.in', 'has_voted': False}])
     if votes_collection.count_documents({"type": "options"}) == 0:
         votes_collection.insert_one({
             "type": "options",
@@ -61,7 +62,7 @@ def generate_otp():
 def send_otp_email(email, otp):
     print(f"OTP for {email}: {otp}")
     msg = EmailMessage()
-    msg.set_content(f"Your OTP for login is: {otp}\nLogin at https://voting-portal.onrender.com/verify-otp")
+    msg.set_content(f"Your OTP for login is: {otp})
     msg['Subject'] = 'PnI Election: Voting Portal Login OTP'
     msg['From'] = 'pni28election@gmail.com'
     msg['To'] = email
@@ -91,6 +92,7 @@ def verify_otp(email, entered_otp):
     return False
 
 def save_vote(option, email):
+
     highest_vote = votes_collection.find_one(
         {"type": "vote"}, 
         sort=[("s_no", -1)]
@@ -180,12 +182,16 @@ if IS_LIVE:
             return "Forbidden", 403
         
         votes = list(votes_collection.find())
-        docs_as_str = json.dumps(votes, default=str, indent=4)
-        return docs_as_str
+        retstr = ""
+        for i in votes:
+            retstr += json.dumps(i, indent=4)
+            retstr+="\n"
+
+        return retstr
         
 
 
-    @app.route('/thank-you')
+    @app.route('/thank-you')                                                                                                                                                                                           
     def thank_you():
         session.clear()
         return render_template('thank_you.html')
@@ -210,3 +216,6 @@ else:
     <h1 style="text-align: center; margin-top: 50px;">Voting has not started yet</h1>
 </body>
 </html>''')
+        
+# if __name__ == '__main__':
+#     app.run(debug=True)
