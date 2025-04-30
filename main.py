@@ -7,7 +7,7 @@ from flask import Flask, render_template, render_template_string, request, redir
 from functools import wraps
 from datetime import datetime
 from pymongo import MongoClient
-from bson.objectid import ObjectId
+
 import json
 
 app = Flask(__name__)
@@ -37,7 +37,7 @@ def ensure_mongodb_setup():
     if votes_collection.count_documents({"type": "options"}) == 0:
         votes_collection.insert_one({
             "type": "options",
-            "options": ["Yatharth Goyal", "Devansh Chouksey", "Harsh Ninania", "None of the above"]
+            "options": ["Yatharth Goyal", "Devansh Chouksey", "None of the above"]
         })
 
 ensure_mongodb_setup()
