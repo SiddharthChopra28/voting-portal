@@ -16,8 +16,7 @@ app.secret_key = ''.join(random.choice(string.ascii_letters + string.digits) for
 DB_PWD = os.environ["DB_PWD"]
 SMTP_PWD = os.environ["SMTP_PWD"]
 
-IS_LIVE = bool(os.environ["IS_LIVE"])
-
+IS_LIVE = bool(int(os.environ["IS_LIVE"]))
 
 ADMIN_ID = 'siddharth_c1@me.iitr.ac.in'
 
