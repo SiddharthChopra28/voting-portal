@@ -13,12 +13,17 @@ import json
 app = Flask(__name__)
 app.secret_key = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
 
+# DB_PWD = os.environ["DB_PWD"]
+# SMTP_PWD = os.environ["SMTP_PWD"]
+
+# IS_LIVE = bool(int(os.environ["IS_LIVE"]))
+
 DB_PWD = os.environ["DB_PWD"]
 SMTP_PWD = os.environ["SMTP_PWD"]
 
 IS_LIVE = bool(int(os.environ["IS_LIVE"]))
 
-ADMIN_ID = 'siddharth_c1@me.iitr.ac.in'
+ADMIN_ID = 'pni28election@gmail.com'
 
 
 client = MongoClient(f'mongodb+srv://siddharth:{DB_PWD}@voting-cluster.6xurpnj.mongodb.net/?retryWrites=true&w=majority&appName=voting-cluster')
